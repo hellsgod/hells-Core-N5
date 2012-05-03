@@ -34,7 +34,7 @@ static void proc_evict_inode(struct inode *inode)
 	void *ns;
 
 	truncate_inode_pages(&inode->i_data, 0);
-	end_writeback(inode);
+	clear_inode(inode);
 
 	/* Stop tracking associated processes */
 	put_pid(PROC_I(inode)->pid);
