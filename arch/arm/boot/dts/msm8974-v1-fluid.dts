@@ -31,3 +31,7 @@
 &sdcc1 {
 	qcom,bus-width = <4>;
 };
+
+&sdcc1 {
+	qcom,bus-width = <4>;
+};
