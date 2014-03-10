@@ -163,6 +163,9 @@ __v7_ca9mp_setup:
 	b	1f
 __v7_ca7mp_setup:
 __v7_ca15mp_setup:
+	mrc	p15, 0, r0, c1, c0, 1
+	orr	r0, #(1<<24)			@ Enable NCSE in ACTLR
+	mcr	p15, 0, r0, c1, c0, 1
 	mov	r10, #0
 1:
 #ifdef CONFIG_SMP
