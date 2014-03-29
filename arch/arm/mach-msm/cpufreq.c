@@ -46,7 +46,7 @@ static struct workqueue_struct *msm_cpufreq_wq;
 
 /* maxscroff */
 uint32_t maxscroff_freq = 1190400;
-uint32_t maxscroff = 0; 
+uint32_t maxscroff = 1; 
 
 struct cpufreq_suspend_t {
 	struct mutex suspend_mutex;
