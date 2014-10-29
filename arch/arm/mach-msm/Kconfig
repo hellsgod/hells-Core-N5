@@ -3023,6 +3023,12 @@ config MSM_CPU_PWRCTL
 	  stand alone power collapse operation. Selecting this option
 	  ensures that they are always off.
 
+config MSM_SLEEPER
+	bool "Limit max frequency and shut off cores while screen is off"
+	default y
+	help
+	  Limit max frequency and shut off cores while screen is off 
+
 config MSM_UARTDM_Core_v14
 	bool "Use MSM BLSP based HSUART Core v1.4"
 	depends on SERIAL_MSM_HS
