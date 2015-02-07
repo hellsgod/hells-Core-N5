@@ -136,6 +136,9 @@ static int timer_slack_val = DEFAULT_TIMER_SLACK;
  */
 static bool align_windows = true;
 
+/* Improves frequency selection for more energy */
+static bool closest_freq_selection;
+
 /*
  * Stay at max freq for at least max_freq_hysteresis before dropping
  * frequency.
@@ -671,9 +674,15 @@ static int cpufreq_interactive_speedchange_task(void *data)
 			}
 
 			if (max_freq != pcpu->policy->cur) {
-				__cpufreq_driver_target(pcpu->policy,
-							max_freq,
-							CPUFREQ_RELATION_H);
+				if (!closest_freq_selection)
+					__cpufreq_driver_target(pcpu->policy,
+								max_freq,
+								CPUFREQ_RELATION_H);
+				else
+					__cpufreq_driver_target(pcpu->policy,
+								max_freq,
+								CPUFREQ_RELATION_C);
+
 				for_each_cpu(j, pcpu->policy->cpus) {
 					pjcpu = &per_cpu(cpuinfo, j);
 					pjcpu->hispeed_validate_time = hvt;
@@ -1171,6 +1180,28 @@ static ssize_t store_use_freq_calc_thresh(struct kobject *kobj,
 static struct global_attr use_freq_calc_thresh_attr = __ATTR(use_freq_calc_thresh, 0644,
 		show_use_freq_calc_thresh, store_use_freq_calc_thresh);
 
+static ssize_t show_closest_freq_selection(struct kobject *kobj,
+				     struct attribute *attr, char *buf)
+{
+	return sprintf(buf, "%u\n", closest_freq_selection);
+}
+
+static ssize_t store_closest_freq_selection(struct kobject *kobj,
+			struct attribute *attr, const char *buf, size_t count)
+{
+	int ret;
+	unsigned long val;
+
+	ret = strict_strtoul(buf, 0, &val);
+	if (ret < 0)
+		return ret;
+	closest_freq_selection = val;
+	return count;
+}
+
+static struct global_attr closest_freq_selection_attr = __ATTR(closest_freq_selection, 0644,
+		show_closest_freq_selection, store_closest_freq_selection);
+
 static struct attribute *interactive_attributes[] = {
 	&target_loads_attr.attr,
 	&freq_calc_thresh_attr.attr,
@@ -1185,6 +1216,7 @@ static struct attribute *interactive_attributes[] = {
 	&two_phase_freq_attr.attr,
 	&align_windows_attr.attr,
 	&use_freq_calc_thresh_attr.attr,
+	&closest_freq_selection_attr.attr,
 	NULL,
 };
 
