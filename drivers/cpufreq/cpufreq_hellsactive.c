@@ -144,6 +144,8 @@ static unsigned int max_freq_hysteresis;
 
 static bool io_is_busy = 1;
 
+static bool use_freq_calc_thresh = true;
+
 static int two_phase_freq_array[NR_CPUS] = {[0 ... NR_CPUS-1] = 1728000} ;
 
 /* Round to starting jiffy of next evaluation window */
@@ -427,10 +429,10 @@ static void cpufreq_interactive_timer(unsigned long data)
 			} else
 				new_freq = hispeed_freq;
 		} else {
-			new_freq = choose_freq(pcpu, loadadjfreq);
-
-			if (new_freq > freq_calc_thresh)
+			if (use_freq_calc_thresh && new_freq > freq_calc_thresh)
 				new_freq = pcpu->policy->max * cpu_load / 100;
+			else
+				new_freq = choose_freq(pcpu, loadadjfreq);
 
 			if (new_freq < hispeed_freq)
 				new_freq = hispeed_freq;
@@ -439,10 +441,11 @@ static void cpufreq_interactive_timer(unsigned long data)
 	} else if (cpu_load <= DOWN_LOW_LOAD_THRESHOLD) {
 		new_freq = pcpu->policy->min;
 	} else {
-		new_freq = choose_freq(pcpu, loadadjfreq);
 
-		if (new_freq > freq_calc_thresh)
+	if (use_freq_calc_thresh && new_freq > freq_calc_thresh)
 				new_freq = pcpu->policy->max * cpu_load / 100;
+			else
+				new_freq = choose_freq(pcpu, loadadjfreq);
 	}
 
 	if (counter > 0) {
@@ -1146,6 +1149,28 @@ static ssize_t store_io_is_busy(struct kobject *kobj,
 static struct global_attr io_is_busy_attr = __ATTR(io_is_busy, 0644,
 		show_io_is_busy, store_io_is_busy);
 
+static ssize_t show_use_freq_calc_thresh(struct kobject *kobj,
+			struct attribute *attr, char *buf)
+{
+	return sprintf(buf, "%u\n", use_freq_calc_thresh);
+}
+
+static ssize_t store_use_freq_calc_thresh(struct kobject *kobj,
+			struct attribute *attr, const char *buf, size_t count)
+{
+	int ret;
+	unsigned long val;
+
+	ret = kstrtoul(buf, 0, &val);
+	if (ret < 0)
+		return ret;
+	use_freq_calc_thresh = val;
+	return count;
+}
+
+static struct global_attr use_freq_calc_thresh_attr = __ATTR(use_freq_calc_thresh, 0644,
+		show_use_freq_calc_thresh, store_use_freq_calc_thresh);
+
 static struct attribute *interactive_attributes[] = {
 	&target_loads_attr.attr,
 	&freq_calc_thresh_attr.attr,
@@ -1159,6 +1184,7 @@ static struct attribute *interactive_attributes[] = {
 	&max_freq_hysteresis_attr.attr,
 	&two_phase_freq_attr.attr,
 	&align_windows_attr.attr,
+	&use_freq_calc_thresh_attr.attr,
 	NULL,
 };
 
