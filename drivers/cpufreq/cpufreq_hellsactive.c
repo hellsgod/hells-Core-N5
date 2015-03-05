@@ -427,7 +427,7 @@ static void cpufreq_interactive_timer(unsigned long data)
 			pcpu->two_phase_freq = two_phase_freq_array[nr_cpus-1];
 			if (pcpu->two_phase_freq < pcpu->policy->cur)
 				phase = 1;
-			if (pcpu->two_phase_freq != 0 && phase == 0 && pcpu->policy->cur >= hispeed_freq) {
+			if (pcpu->two_phase_freq != 0 && phase == 0) {
 				new_freq = pcpu->two_phase_freq;
 			} else
 				new_freq = hispeed_freq;
