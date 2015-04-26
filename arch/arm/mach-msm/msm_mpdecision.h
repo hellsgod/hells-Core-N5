@@ -37,26 +37,6 @@
 #define MSM_MPDEC_IDLE_FREQ			486000
 #endif
 
-#ifdef CONFIG_MSM_MPDEC_INPUTBOOST_CPUMIN
-#define MSM_MPDEC_BOOSTTIME			1000
-#ifdef CONFIG_ARCH_MSM8974
-#define MSM_MPDEC_BOOSTFREQ_CPU0		960000
-#define MSM_MPDEC_BOOSTFREQ_CPU1		960000
-#define MSM_MPDEC_BOOSTFREQ_CPU2		729600
-#define MSM_MPDEC_BOOSTFREQ_CPU3		576000
-#elif defined CONFIG_ARCH_MSM8X60 || defined CONFIG_ARCH_MSM8960 || defined CONFIG_ARCH_MSM8930
-#define MSM_MPDEC_BOOSTFREQ_CPU0		918000
-#define MSM_MPDEC_BOOSTFREQ_CPU1		918000
-#define MSM_MPDEC_BOOSTFREQ_CPU2		702000
-#define MSM_MPDEC_BOOSTFREQ_CPU3		594000
-#else
-#define MSM_MPDEC_BOOSTFREQ_CPU0		918000
-#define MSM_MPDEC_BOOSTFREQ_CPU1		918000
-#define MSM_MPDEC_BOOSTFREQ_CPU2		702000
-#define MSM_MPDEC_BOOSTFREQ_CPU3		594000
-#endif
-#endif
-
 enum {
 	MSM_MPDEC_DISABLED = 0,
 	MSM_MPDEC_IDLE,
@@ -71,15 +51,6 @@ struct msm_mpdec_cpudata_t {
 	cputime64_t on_time_total;
 	long long unsigned int times_cpu_hotplugged;
 	long long unsigned int times_cpu_unplugged;
-#ifdef CONFIG_MSM_MPDEC_INPUTBOOST_CPUMIN
-	struct mutex boost_mutex;
-	struct mutex unboost_mutex;
-	unsigned long int norm_min_freq;
-	unsigned long int boost_freq;
-	cputime64_t boost_until;
-	bool is_boosted;
-	bool revib_wq_running;
-#endif
 };
 #endif //__MSM_MPDEC_H__
 
