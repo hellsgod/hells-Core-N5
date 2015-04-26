@@ -34,7 +34,7 @@ DECOMPRESS = decompress.o
 
 # string library code (-Os is enforced to keep it much smaller)
 OBJS		+= string.o
-CFLAGS_string.o	:= -Os
+CFLAGS_string.o	:= -Os -fno-prefetch-loop-arrays
 
 #
 # Architecture dependencies
