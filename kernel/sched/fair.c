@@ -1738,7 +1738,7 @@ pick_next_entity(struct cfs_rq *cfs_rq, struct sched_entity *curr)
 	return se;
 }
 
-static bool check_cfs_rq_runtime(struct cfs_rq *cfs_rq);
+static void check_cfs_rq_runtime(struct cfs_rq *cfs_rq);
 
 static void put_prev_entity(struct cfs_rq *cfs_rq, struct sched_entity *prev)
 {
@@ -2390,23 +2390,22 @@ static void check_enqueue_throttle(struct cfs_rq *cfs_rq)
 }
 
 /* conditionally throttle active cfs_rq's from put_prev_entity() */
-static bool check_cfs_rq_runtime(struct cfs_rq *cfs_rq)
+static void check_cfs_rq_runtime(struct cfs_rq *cfs_rq)
 {
 	if (!cfs_bandwidth_used())
-		return false;
+		return;
 
 	if (likely(!cfs_rq->runtime_enabled || cfs_rq->runtime_remaining > 0))
-		return false;
+		return;
 
 	/*
 	 * it's possible for a throttled entity to be forced into a running
 	 * state (e.g. set_curr_task), in this case we're finished.
 	 */
 	if (cfs_rq_throttled(cfs_rq))
-		return true;
+		return;
 
 	throttle_cfs_rq(cfs_rq);
-	return true;
 }
 
 static inline u64 default_cfs_period(void);
