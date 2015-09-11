@@ -893,7 +893,7 @@ static int gic_irq_domain_xlate(struct irq_domain *d,
 }
 
 #ifdef CONFIG_SMP
-static int gic_secondary_init(struct notifier_block *nfb,
+static int __cpuinit gic_secondary_init(struct notifier_block *nfb,
 					unsigned long action, void *hcpu)
 {
 	if (action == CPU_STARTING || action == CPU_STARTING_FROZEN)
@@ -905,7 +905,7 @@ static int gic_secondary_init(struct notifier_block *nfb,
  * Notifier for enabling the GIC CPU interface. Set an arbitrarily high
  * priority because the GIC needs to be up before the ARM generic timers.
  */
-static struct notifier_block gic_cpu_notifier = {
+static struct notifier_block __cpuinitdata gic_cpu_notifier = {
 	.notifier_call = gic_secondary_init,
 	.priority = 100,
 };
@@ -1010,16 +1010,6 @@ void __init gic_init_bases(unsigned int gic_nr, int irq_start,
 	gic_pm_init(gic);
 }
 
-<<<<<<< HEAD
-void __cpuinit gic_secondary_init(unsigned int gic_nr)
-{
-	BUG_ON(gic_nr >= MAX_GIC_NR);
-
-	gic_cpu_init(&gic_data[gic_nr]);
-}
-
-=======
->>>>>>> 80e1319... ARM: gic: Bring inline with upstream
 #ifdef CONFIG_SMP
 void gic_raise_softirq(const struct cpumask *mask, unsigned int irq)
 {
