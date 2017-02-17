@@ -15,7 +15,7 @@ DEFCONFIG="hells_defconfig"
 
 # Kernel Details
 BASE_HC_VER="hC"
-VER="-b21.1-M"
+VER="-b22-M"
 HC_VER="$BASE_HC_VER$VER"
 
 # Vars
@@ -26,7 +26,7 @@ export SUBARCH=arm
 # Paths
 KERNEL_DIR=`pwd`
 REPACK_DIR="${HOME}/Android/Kernel/hC-N5-anykernel"
-ZIP_MOVE="${HOME}/Android/Kernel/hC-releases"
+ZIP_MOVE="${HOME}/Android/Kernel/hC-releases/N5"
 ZIMAGE_DIR="${HOME}/Android/Kernel/hells-Core-N5/arch/arm/boot"
 DB_FOLDER="${HOME}/Dropbox/Kernel-Betas/N5"
 
