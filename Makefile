@@ -193,7 +193,7 @@ SUBARCH := $(shell uname -m | sed -e s/i.86/i386/ -e s/sun4u/sparc64/ \
 # Note: Some architectures assign CROSS_COMPILE in their arch/*/Makefile
 export KBUILD_BUILDHOST := $(SUBARCH)
 ARCH		?= $(SUBARCH)
-CROSS_COMPILE	?= /home/hellsgod/Android/Kernel/arm-eabi-5.x/bin/arm-eabi-
+CROSS_COMPILE	?= /home/hellsgod/Android/Kernel/arm-eabi-6.x/bin/arm-eabi-
 
 # Architecture as present in compile.h
 UTS_MACHINE 	:= $(ARCH)
@@ -575,6 +575,12 @@ KBUILD_CFLAGS	+= -O3
 KBUILD_CFLAGS   += $(call cc-disable-warning,maybe-uninitialized) -fno-inline-functions
 KBUILD_CFLAGS   += $(call cc-disable-warning,array-bounds) 
 endif
+KBUILD_CFLAGS   += $(call cc-disable-warning,misleading-indentation)
+KBUILD_CFLAGS   += $(call cc-disable-warning,unused-const-variable)
+KBUILD_CFLAGS   += $(call cc-disable-warning,array-bounds)
+KBUILD_CFLAGS   += $(call cc-disable-warning,bool-compare)
+KBUILD_CFLAGS   += $(call cc-disable-warning,tautological-compare)
+KBUILD_CFLAGS   += $(call cc-disable-warning,shift-overflow)
 
 # conserve stack if available
 # do this early so that an architecture can override it.
